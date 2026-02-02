@@ -7,6 +7,8 @@ const CommentSchema = z.object({
   comment: z.string(),
 })
 
+export type Comment = z.infer<typeof CommentSchema>
+
 export const contract = oc.router({
   health: oc
     .route({

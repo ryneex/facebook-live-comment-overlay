@@ -1,6 +1,7 @@
 {
   "extends": "@repo/ts-config/react.json",
   "compilerOptions": {
+    "types": ["vite/client"],
     "paths": {
       "@repo/overlay/*": ["./src/*"]
     }
