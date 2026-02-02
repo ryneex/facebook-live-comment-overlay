@@ -39,29 +39,23 @@ export function App() {
 
   return (
     <div className="wrapper dark h-screen w-screen overflow-hidden">
-      <div ref={chatContainerRef} className="chat-container hide-scrollbar flex size-full flex-col gap-2 overflow-auto">
+      <div ref={chatContainerRef} className="chat-container hide-scrollbar flex size-full flex-col overflow-auto">
+        <div className="flex-1"></div>
+
         {comments.map((comment, index) => {
           const color = uniqolor(comment.author).color
 
           return (
-            <div className="chat" key={index}>
-              <p style={{ color }} className="chat-author mr-2 inline-block text-sm font-medium">
+            <div className="chat py-1 text-sm" key={index}>
+              <p style={{ color }} className="chat-author mr-2 inline-block font-medium">
                 <img
                   className="chat-author-avatar mr-2 inline size-4 rounded-full object-cover"
                   src={comment.image}
                   alt={comment.author}
                 />
-                <span
-                  className="chat-author-name font-bold"
-                  style={{
-                    textShadow: `0 0 10px ${color}`,
-                  }}
-                >
-                  {comment.author}
-                </span>
-                {" :"}
+                <span className="chat-author-name font-bold">{comment.author} :</span>
               </p>
-              <p className="chat-comment inline text-sm text-white/90">{comment.comment}</p>
+              <p className="chat-comment inline wrap-break-word whitespace-pre-wrap">{comment.comment}</p>
             </div>
           )
         })}
