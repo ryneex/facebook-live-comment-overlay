@@ -1,0 +1,31 @@
+{
+  "name": "@repo/server",
+  "type": "module",
+  "private": true,
+  "scripts": {
+    "dev": "tsx src/index.ts",
+    "build": "tsx scripts/build.ts",
+    "format": "prettier --write .",
+    "lint": "eslint .",
+    "check-types": "tsc --noEmit",
+    "check": "npm run check-types && npm run lint"
+  },
+  "dependencies": {
+    "@orpc/contract": "^1.13.4",
+    "@orpc/server": "^1.13.4",
+    "serve-static": "^2.2.1",
+    "ws": "^8.19.0"
+  },
+  "devDependencies": {
+    "@repo/config": "workspace:*",
+    "@repo/ts-config": "workspace:*",
+    "@types/fs-extra": "^11.0.4",
+    "@types/serve-static": "^2.2.0",
+    "@types/ws": "^8.18.1",
+    "esbuild": "^0.27.2",
+    "fs-extra": "^11.3.3",
+    "hono": "^4.11.7",
+    "tsx": "^4.21.0",
+    "zod": "^4.3.6"
+  }
+}
