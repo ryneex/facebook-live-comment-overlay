@@ -1,0 +1,25 @@
+{
+  "name": "@repo/config",
+  "version": "0.0.0",
+  "type": "module",
+  "private": true,
+  "scripts": {
+    "format": "prettier --write .",
+    "check-types": "tsc --noEmit",
+    "check": "npm run check-types"
+  },
+  "exports": {
+    "./eslint-base": "./eslint-base.ts",
+    "./eslint-react": "./eslint-react.ts",
+    "./prettier": "./prettier.config.ts"
+  },
+  "devDependencies": {
+    "@repo/ts-config": "workspace:*",
+    "eslint-plugin-react": "^7.37.5",
+    "eslint-plugin-react-hooks": "^5.2.0",
+    "eslint-plugin-turbo": "^2.5.0",
+    "prettier-plugin-tailwindcss": "^0.7.2",
+    "typescript": "5.9.2",
+    "typescript-eslint": "^8.40.0"
+  }
+}
