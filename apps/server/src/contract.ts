@@ -22,7 +22,7 @@ export const contract = oc.router({
   comments: oc
     .route({
       path: "/comments",
-      method: "GET",
+      method: "POST",
     })
     .input(z.array(CommentSchema))
     .output(z.array(CommentSchema)),

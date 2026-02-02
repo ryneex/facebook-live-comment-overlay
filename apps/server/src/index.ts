@@ -1,12 +1,10 @@
 import { router } from "./router"
-import { RPCHandler } from "@orpc/server/node"
+import { OpenAPIHandler } from "@orpc/openapi/node"
 import { WebSocketServer } from "ws"
 import { createServer } from "node:http"
-import serveStatic from "serve-static"
 
 const server = createServer()
-const rpcHandler = new RPCHandler(router)
-// const serve = serveStatic("")
+const orpcHandler = new OpenAPIHandler(router)
 
 const ws = new WebSocketServer({
   path: "/api/ws",
@@ -14,7 +12,7 @@ const ws = new WebSocketServer({
 })
 
 server.on("request", async (req, res) => {
-  const { matched } = await rpcHandler.handle(req, res, {
+  const { matched } = await orpcHandler.handle(req, res, {
     context: {
       ws,
     },

@@ -3,7 +3,7 @@
   "type": "module",
   "private": true,
   "scripts": {
-    "dev": "tsx src/index.ts",
+    "dev": "tsx watch src/index.ts",
     "build": "tsx scripts/build.ts",
     "format": "prettier --write .",
     "lint": "eslint .",
@@ -12,6 +12,7 @@
   },
   "dependencies": {
     "@orpc/contract": "^1.13.4",
+    "@orpc/openapi": "^1.13.4",
     "@orpc/server": "^1.13.4",
     "serve-static": "^2.2.1",
     "ws": "^8.19.0"
