@@ -3,9 +3,11 @@
   "ui": "tui",
   "tasks": {
     "build": {
-      "dependsOn": ["^build"],
-      "inputs": ["$TURBO_DEFAULT$", ".env*"],
-      "outputs": [".next/**", "!.next/cache/**"]
+      "cache": false
+    },
+    "@repo/overlay#build": {
+      "dependsOn": ["@repo/server#build"],
+      "cache": false
     },
     "lint": {
       "dependsOn": ["^lint"]
