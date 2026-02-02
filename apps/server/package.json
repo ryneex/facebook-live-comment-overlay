@@ -15,7 +15,8 @@
     "@orpc/openapi": "^1.13.4",
     "@orpc/server": "^1.13.4",
     "serve-static": "^2.2.1",
-    "ws": "^8.19.0"
+    "ws": "^8.19.0",
+    "zod": "^4.3.6"
   },
   "devDependencies": {
     "@repo/config": "workspace:*",
@@ -25,8 +26,6 @@
     "@types/ws": "^8.18.1",
     "esbuild": "^0.27.2",
     "fs-extra": "^11.3.3",
-    "hono": "^4.11.7",
-    "tsx": "^4.21.0",
-    "zod": "^4.3.6"
+    "tsx": "^4.21.0"
   }
 }
