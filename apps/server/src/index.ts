@@ -2,9 +2,12 @@ import { router } from "./router"
 import { OpenAPIHandler } from "@orpc/openapi/node"
 import { WebSocketServer } from "ws"
 import { createServer } from "node:http"
+import serveStatic from "serve-static"
+import path from "node:path"
 
 const server = createServer()
 const orpcHandler = new OpenAPIHandler(router)
+const serve = serveStatic(path.resolve(import.meta.dirname, "./overlay"))
 
 const ws = new WebSocketServer({
   path: "/api/ws",
@@ -21,7 +24,9 @@ server.on("request", async (req, res) => {
 
   if (matched) return
 
-  res.end("Not found")
+  serve(req, res, () => {
+    res.end("Not found")
+  })
 })
 
 server.listen(3000, () => {
