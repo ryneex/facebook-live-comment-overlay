@@ -55,7 +55,7 @@ export function App() {
                 />
                 <span className="chat-author-name font-bold">{comment.author} :</span>
               </p>
-              <p className="chat-comment inline wrap-break-word whitespace-pre-wrap">{comment.comment}</p>
+              <p className="chat-comment inline wrap-break-word whitespace-pre-wrap text-white/90">{comment.comment}</p>
             </div>
           )
         })}
