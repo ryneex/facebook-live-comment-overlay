@@ -1,4 +1,4 @@
-import type { Comment } from "./contract"
+import type { Comment } from "../routes/contract"
 
 export const store = {
   comments: [] as Comment[],
