@@ -6,6 +6,8 @@ import { createServer } from "node:http"
 import serveStatic from "serve-static"
 import path from "node:path"
 import { store } from "./memory/store"
+import { API_KEY_HEADER } from "../constants"
+import { auth } from "./lib/auth"
 
 type Args = {
   port: number
@@ -48,11 +50,19 @@ export function startServer(args: Args) {
     }
 
     const appSecretKey = args.secret
-    const headerSecretKey = req.headers["x-secret-key"]
+    const headerApiKey = req.headers[API_KEY_HEADER]
 
     if (!appSecretKey) return handleUpgrade()
 
-    if (appSecretKey !== headerSecretKey) {
+    if (typeof headerApiKey !== "string") {
+      socket.write("HTTP/1.1 401 Unauthorized\r\n\r\n")
+      socket.destroy()
+      return
+    }
+
+    const isValidApiKey = auth.isValidApiKey(appSecretKey, headerApiKey)
+
+    if (!isValidApiKey) {
       socket.write("HTTP/1.1 401 Unauthorized\r\n\r\n")
       socket.destroy()
       return

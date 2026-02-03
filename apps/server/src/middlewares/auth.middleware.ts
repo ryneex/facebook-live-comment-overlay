@@ -1,21 +1,25 @@
 import { ORPCError, os } from "@orpc/server"
 import type { Context } from "../types"
+import { API_KEY_HEADER } from "../../constants"
+import { auth } from "../lib/auth"
 
 export const authMiddleware = os.$context<Context>().middleware(({ context, next }) => {
-  const headerSecretKey = context.req.headers["x-secret-key"]
-  const appSecretKey = context.secretKey
+  const headerApiKey = context.req.headers[API_KEY_HEADER]
+  const secretKey = context.secretKey
 
-  if (!appSecretKey) return next()
+  if (!secretKey) return next()
 
-  if (!headerSecretKey) {
+  if (typeof headerApiKey !== "string") {
     throw new ORPCError("UNAUTHORIZED", {
-      message: "X-Secret header is missing",
+      message: `${API_KEY_HEADER} header is missing`,
     })
   }
 
-  if (appSecretKey !== headerSecretKey) {
+  const isValidApiKey = auth.isValidApiKey(secretKey, headerApiKey)
+
+  if (!isValidApiKey) {
     throw new ORPCError("UNAUTHORIZED", {
-      message: "Invalid secret",
+      message: `Invalid ${API_KEY_HEADER}`,
     })
   }
 
