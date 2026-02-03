@@ -1,7 +1,7 @@
 import useWebSocket from "react-use-websocket"
 import { WEBSOCKET_URL } from "./constants/websocket"
 import z from "zod"
-import { useEffect, useRef, useState } from "react"
+import { useEffect, useMemo, useRef, useState } from "react"
 import uniqolor from "uniqolor"
 
 const CommentSchema = z.object({
@@ -20,10 +20,15 @@ const WebSocketMessageSchema = z.object({
 export function App() {
   const chatContainerRef = useRef<HTMLDivElement>(null)
   const [comments, setComments] = useState<Comment[]>([])
+  const apiKey = useMemo(() => {
+    const url = new URL(window.location.href)
+    return url.searchParams.get("key")
+  }, [])
 
   useWebSocket(WEBSOCKET_URL, {
     retryOnError: true,
     shouldReconnect: () => true,
+    queryParams: apiKey ? { key: apiKey } : undefined,
     onMessage: (event) => {
       const result = WebSocketMessageSchema.parse(JSON.parse(event.data))
       setComments(result.data)
