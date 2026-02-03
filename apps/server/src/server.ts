@@ -5,8 +5,8 @@ import { WebSocketServer } from "ws"
 import { createServer } from "node:http"
 import serveStatic from "serve-static"
 import path from "node:path"
+import pc from "picocolors"
 import { store } from "./memory/store"
-import { API_KEY_HEADER } from "../constants"
 import { auth } from "./lib/auth"
 
 type Args = {
@@ -16,6 +16,10 @@ type Args = {
 }
 
 export function startServer(args: Args) {
+  const host = args.host || "0.0.0.0"
+  const port = args.port
+  const secretKey = args.secret
+
   const server = createServer()
   const orpcHandler = new OpenAPIHandler(router, { plugins: [new CORSPlugin()] })
   const serve = serveStatic(path.resolve(import.meta.dirname, "./overlay"))
@@ -32,7 +36,7 @@ export function startServer(args: Args) {
         wss,
         req,
         res,
-        secretKey: args.secret,
+        secretKey,
       },
       prefix: "/api",
     })
@@ -45,22 +49,22 @@ export function startServer(args: Args) {
   })
 
   server.on("upgrade", (req, socket, head) => {
+    const url = new URL(`http://${host}:${port}${req.url}`)
+
     function handleUpgrade() {
       wss.handleUpgrade(req, socket, head, (ws) => wss.emit("connection", ws, req))
     }
 
-    const appSecretKey = args.secret
-    const headerApiKey = req.headers[API_KEY_HEADER]
+    if (!secretKey) return handleUpgrade()
 
-    if (!appSecretKey) return handleUpgrade()
-
-    if (typeof headerApiKey !== "string") {
+    const apiKey = url.searchParams.get("key")
+    if (!apiKey) {
       socket.write("HTTP/1.1 401 Unauthorized\r\n\r\n")
       socket.destroy()
       return
     }
 
-    const isValidApiKey = auth.isValidApiKey(appSecretKey, headerApiKey)
+    const isValidApiKey = auth.isValidApiKey(secretKey, apiKey)
 
     if (!isValidApiKey) {
       socket.write("HTTP/1.1 401 Unauthorized\r\n\r\n")
@@ -72,6 +76,31 @@ export function startServer(args: Args) {
   })
 
   server.listen(args.port, args.host, () => {
-    console.log(`Server is running on port ${args.port}`)
+    const baseUrl = `http://${host}:${port}`
+
+    console.log()
+    console.log(pc.bold(pc.green("✓ Overlay server is running")))
+    console.log()
+    console.log(pc.dim("  Host:") + ` ${host}`)
+    console.log(pc.dim("  Port:") + ` ${port}`)
+
+    if (secretKey) {
+      const apiKey = auth.generateApiKey(secretKey)
+      const overlayUrl = `${baseUrl}?key=${apiKey}`
+      console.log()
+      console.log(pc.yellow("  ⚠  API authentication enabled - overlay will only work with this key"))
+      console.log()
+      console.log(pc.dim("  API Key:") + ` ${pc.cyan(apiKey)}`)
+      console.log(pc.dim("  Overlay URL:") + ` ${pc.cyan(overlayUrl)}`)
+    } else {
+      console.log()
+      console.log(pc.yellow("  ⚠  No secret provided - API authentication disabled"))
+      console.log()
+      console.log(pc.dim("  Overlay URL:") + ` ${pc.cyan(baseUrl)}`)
+    }
+    console.log(pc.dim("  API URL:") + ` ${pc.cyan(`${baseUrl}/api`)}`)
+    console.log(pc.dim("  WebSocket URL:") + ` ${pc.cyan(`${baseUrl}/api/ws`)}`)
+
+    console.log()
   })
 }
