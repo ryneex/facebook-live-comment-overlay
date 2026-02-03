@@ -8,17 +8,10 @@ import path from "node:path"
 import pc from "picocolors"
 import { store } from "./memory/store"
 import { auth } from "./lib/auth"
+import type { Variables } from "./types"
 
-type Args = {
-  port: number
-  secret?: string
-  host?: string
-}
-
-export function startServer(args: Args) {
-  const host = args.host || "0.0.0.0"
-  const port = args.port
-  const secretKey = args.secret
+export function startServer(args: Variables) {
+  const { baseUrl, host, port, secretKey } = args
 
   const server = createServer()
   const orpcHandler = new OpenAPIHandler(router, { plugins: [new CORSPlugin()] })
@@ -76,8 +69,6 @@ export function startServer(args: Args) {
   })
 
   server.listen(args.port, args.host, () => {
-    const baseUrl = `http://${host}:${port}`
-
     console.log()
     console.log(pc.bold(pc.green("✓ Overlay server is running")))
     console.log()

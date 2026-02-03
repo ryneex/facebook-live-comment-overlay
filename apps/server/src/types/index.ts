@@ -7,3 +7,14 @@ export type Context = {
   res: ServerResponse<IncomingMessage>
   secretKey?: string
 }
+
+export type CliArgs = {
+  host: string
+  port: number
+  secret?: string
+}
+
+export type Variables = Pick<CliArgs, "host" | "port"> & {
+  baseUrl: string
+  secretKey?: string
+}

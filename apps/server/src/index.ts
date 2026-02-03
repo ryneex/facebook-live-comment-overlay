@@ -1,5 +1,6 @@
 import { command, run, option, number, string, optional } from "cmd-ts"
 import { startServer } from "./server"
+import { getVariables } from "./helpers/get-variables"
 
 const app = command({
   name: "Server",
@@ -27,7 +28,8 @@ const app = command({
     }),
   },
   handler(args) {
-    startServer(args)
+    const variables = getVariables(args)
+    startServer(variables)
   },
 })
 
