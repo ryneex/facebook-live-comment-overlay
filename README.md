@@ -1,135 +1,264 @@
-# Turborepo starter
+# Facebook Live Comment Overlay
 
-This Turborepo starter is maintained by the Turborepo core team.
+A real-time comment overlay server for Facebook Live streams. This server receives comments from the [Facebook Live Comment Bridge](https://github.com/ryneex/facebook-live-comment-bridge) browser extension and displays them in a beautiful, customizable overlay interface via WebSocket.
 
-## Using this example
+## Features
 
-Run the following command:
+- 🚀 **Real-time Updates**: WebSocket-based live comment streaming
+- 🔒 **Secure**: Optional API key authentication
+- 🔌 **Extension Compatible**: Fully compatible with [facebook-live-comment-bridge](https://github.com/ryneex/facebook-live-comment-bridge)
+- 🐳 **Docker Ready**: Pre-built Docker image available
+- 📡 **RESTful API**: Standard HTTP endpoints for comment submission
 
-```sh
-npx create-turbo@latest
+## Quick Start with Docker
+
+The easiest way to run the server is using the pre-built Docker image:
+
+```bash
+docker pull ghcr.io/ryneex/facebook-live-comment-overlay:latest
+docker run -p 3000:3000 ghcr.io/ryneex/facebook-live-comment-overlay:latest
 ```
 
-## What's inside?
+### Docker with Custom Configuration
 
-This Turborepo includes the following packages/apps:
-
-### Apps and Packages
-
-- `docs`: a [Next.js](https://nextjs.org/) app
-- `web`: another [Next.js](https://nextjs.org/) app
-- `@repo/ui`: a stub React component library shared by both `web` and `docs` applications
-- `@repo/eslint-config`: `eslint` configurations (includes `eslint-config-next` and `eslint-config-prettier`)
-- `@repo/typescript-config`: `tsconfig.json`s used throughout the monorepo
-
-Each package/app is 100% [TypeScript](https://www.typescriptlang.org/).
-
-### Utilities
-
-This Turborepo has some additional tools already setup for you:
-
-- [TypeScript](https://www.typescriptlang.org/) for static type checking
-- [ESLint](https://eslint.org/) for code linting
-- [Prettier](https://prettier.io) for code formatting
-
-### Build
-
-To build all apps and packages, run the following command:
-
-```
-cd my-turborepo
-
-# With [global `turbo`](https://turborepo.dev/docs/getting-started/installation#global-installation) installed (recommended)
-turbo build
-
-# Without [global `turbo`](https://turborepo.dev/docs/getting-started/installation#global-installation), use your package manager
-npx turbo build
-yarn dlx turbo build
-pnpm exec turbo build
+```bash
+docker run -p 3000:3000 \
+  -e SECRET_KEY=your-secret-key \
+  -e BASE_URL=http://localhost:3000 \
+  ghcr.io/ryneex/facebook-live-comment-overlay:latest
 ```
 
-You can build a specific package by using a [filter](https://turborepo.dev/docs/crafting-your-repository/running-tasks#using-filters):
+Or with custom port:
 
-```
-# With [global `turbo`](https://turborepo.dev/docs/getting-started/installation#global-installation) installed (recommended)
-turbo build --filter=docs
-
-# Without [global `turbo`](https://turborepo.dev/docs/getting-started/installation#global-installation), use your package manager
-npx turbo build --filter=docs
-yarn exec turbo build --filter=docs
-pnpm exec turbo build --filter=docs
+```bash
+docker run -p 8080:8080 \
+  ghcr.io/ryneex/facebook-live-comment-overlay:latest \
+  --port 8080
 ```
 
-### Develop
+## Installation
 
-To develop all apps and packages, run the following command:
+### Prerequisites
 
-```
-cd my-turborepo
+- Node.js >= 18
+- pnpm >= 10.28.0
 
-# With [global `turbo`](https://turborepo.dev/docs/getting-started/installation#global-installation) installed (recommended)
-turbo dev
+### Local Installation
 
-# Without [global `turbo`](https://turborepo.dev/docs/getting-started/installation#global-installation), use your package manager
-npx turbo dev
-yarn exec turbo dev
-pnpm exec turbo dev
-```
+1. Clone the repository:
 
-You can develop a specific package by using a [filter](https://turborepo.dev/docs/crafting-your-repository/running-tasks#using-filters):
-
-```
-# With [global `turbo`](https://turborepo.dev/docs/getting-started/installation#global-installation) installed (recommended)
-turbo dev --filter=web
-
-# Without [global `turbo`](https://turborepo.dev/docs/getting-started/installation#global-installation), use your package manager
-npx turbo dev --filter=web
-yarn exec turbo dev --filter=web
-pnpm exec turbo dev --filter=web
+```bash
+git clone https://github.com/ryneex/facebook-live-comment-overlay.git
+cd facebook-live-comment-overlay
 ```
 
-### Remote Caching
+2. Install dependencies:
 
-> [!TIP]
-> Vercel Remote Cache is free for all plans. Get started today at [vercel.com](https://vercel.com/signup?/signup?utm_source=remote-cache-sdk&utm_campaign=free_remote_cache).
-
-Turborepo can use a technique known as [Remote Caching](https://turborepo.dev/docs/core-concepts/remote-caching) to share cache artifacts across machines, enabling you to share build caches with your team and CI/CD pipelines.
-
-By default, Turborepo will cache locally. To enable Remote Caching you will need an account with Vercel. If you don't have an account you can [create one](https://vercel.com/signup?utm_source=turborepo-examples), then enter the following commands:
-
-```
-cd my-turborepo
-
-# With [global `turbo`](https://turborepo.dev/docs/getting-started/installation#global-installation) installed (recommended)
-turbo login
-
-# Without [global `turbo`](https://turborepo.dev/docs/getting-started/installation#global-installation), use your package manager
-npx turbo login
-yarn exec turbo login
-pnpm exec turbo login
+```bash
+pnpm install
 ```
 
-This will authenticate the Turborepo CLI with your [Vercel account](https://vercel.com/docs/concepts/personal-accounts/overview).
+3. Build the project:
 
-Next, you can link your Turborepo to your Remote Cache by running the following command from the root of your Turborepo:
-
-```
-# With [global `turbo`](https://turborepo.dev/docs/getting-started/installation#global-installation) installed (recommended)
-turbo link
-
-# Without [global `turbo`](https://turborepo.dev/docs/getting-started/installation#global-installation), use your package manager
-npx turbo link
-yarn exec turbo link
-pnpm exec turbo link
+```bash
+pnpm build
 ```
 
-## Useful Links
+4. Start the server:
 
-Learn more about the power of Turborepo:
+```bash
+cd apps/server
+node dist/index.js
+```
 
-- [Tasks](https://turborepo.dev/docs/crafting-your-repository/running-tasks)
-- [Caching](https://turborepo.dev/docs/crafting-your-repository/caching)
-- [Remote Caching](https://turborepo.dev/docs/core-concepts/remote-caching)
-- [Filtering](https://turborepo.dev/docs/crafting-your-repository/running-tasks#using-filters)
-- [Configuration Options](https://turborepo.dev/docs/reference/configuration)
-- [CLI Usage](https://turborepo.dev/docs/reference/command-line-reference)
+## Configuration
+
+### Environment Variables
+
+- `SECRET_KEY` (optional): Secret key for API authentication. If provided, all API requests must include a valid API key.
+- `BASE_URL` (optional): Base URL for the server. Defaults to `http://0.0.0.0:3000`.
+
+### Command Line Options
+
+- `--port, -p`: Port to listen on (default: 3000)
+- `--host, -h`: Host to listen on (default: 0.0.0.0)
+- `--secret, -s`: Secret key for API authentication (optional)
+
+Example:
+
+```bash
+node dist/index.js --port 8080 --host 0.0.0.0 --secret my-secret-key
+```
+
+## Usage
+
+### 1. Start the Server
+
+Start the server using Docker or locally:
+
+```bash
+# Docker
+docker run -p 3000:3000 ghcr.io/ryneex/facebook-live-comment-overlay:latest
+
+# Local
+cd apps/server && node dist/index.js
+```
+
+### 2. Configure the Browser Extension
+
+This server is **fully compatible** with the [Facebook Live Comment Bridge](https://github.com/ryneex/facebook-live-comment-bridge) browser extension.
+
+1. Install the [Facebook Live Comment Bridge](https://github.com/ryneex/facebook-live-comment-bridge) extension
+2. Open the extension settings
+3. Set your API endpoint URL to: `http://localhost:3000/api` (or your server URL)
+4. If you've set a `SECRET_KEY`, enter it in the extension's API key field
+
+### 3. Access the Overlay
+
+Once the server is running, you'll see output like:
+
+```
+✓ Overlay server is running
+
+  Host: 0.0.0.0
+  Port: 3000
+  Overlay URL: http://localhost:3000
+  API URL: http://localhost:3000/api
+  WebSocket URL: http://localhost:3000/api/ws
+```
+
+Open the **Overlay URL** in a browser (or OBS browser source) to display the live comments.
+
+If authentication is enabled, the overlay URL will include an API key:
+
+```
+  Overlay URL: http://localhost:3000?key=your-generated-api-key
+```
+
+## API Documentation
+
+### POST `/api/`
+
+Submit comments to the server. This endpoint is used by the browser extension.
+
+**Headers:**
+
+- `Content-Type: application/json`
+- `x-api-key: <api-key>` (required if `SECRET_KEY` is set)
+
+**Request Body:**
+
+```json
+[
+  {
+    "image": "https://example.com/profile.jpg",
+    "author": "John Doe",
+    "comment": "Great stream!"
+  }
+]
+```
+
+**Response:**
+
+Returns the same array of comments that was submitted.
+
+### GET `/api/health`
+
+Health check endpoint.
+
+**Response:**
+
+```json
+{
+  "status": "OK"
+}
+```
+
+### WebSocket `/api/ws`
+
+Real-time WebSocket connection for receiving comment updates.
+
+**Connection URL:**
+
+- Without auth: `ws://localhost:3000/api/ws`
+- With auth: `ws://localhost:3000/api/ws?key=<api-key>`
+
+**Message Format:**
+
+```json
+{
+  "type": "comments",
+  "data": [
+    {
+      "image": "https://example.com/profile.jpg",
+      "author": "John Doe",
+      "comment": "Great stream!"
+    }
+  ]
+}
+```
+
+## Development
+
+### Project Structure
+
+This is a Turborepo monorepo containing:
+
+- `apps/server`: Node.js server application
+- `apps/overlay`: React overlay frontend
+- `packages/ui`: Shared UI components
+- `packages/config`: Shared configuration (ESLint, Prettier, TypeScript)
+
+### Development Commands
+
+```bash
+# Install dependencies
+pnpm install
+
+# Run development server
+pnpm dev
+
+# Build all packages
+pnpm build
+
+# Format code
+pnpm format
+
+# Lint code
+pnpm lint
+
+# Type check
+pnpm check-types
+```
+
+### Running Individual Apps
+
+```bash
+# Server only
+cd apps/server
+pnpm dev
+
+# Overlay only
+cd apps/overlay
+pnpm dev
+```
+
+## Tech Stack
+
+- **Server**: Node.js, TypeScript, oRPC
+- **Frontend**: React, Vite, Tailwind CSS
+- **WebSocket**: ws
+- **Build Tool**: Turborepo, esbuild
+- **Package Manager**: pnpm
+
+## License
+
+MIT
+
+## Contributing
+
+Contributions are welcome! Please feel free to submit a Pull Request.
+
+## Related Projects
+
+- [Facebook Live Comment Bridge](https://github.com/ryneex/facebook-live-comment-bridge) - Browser extension for scraping Facebook Live comments
