@@ -28,12 +28,13 @@ docker run -p 3000:3000 \
   ghcr.io/ryneex/facebook-live-comment-overlay:latest
 ```
 
-Or with custom port:
+Or with custom port and host via environment variables:
 
 ```bash
 docker run -p 8080:8080 \
-  ghcr.io/ryneex/facebook-live-comment-overlay:latest \
-  --port 8080
+  -e PORT=8080 \
+  -e HOST=0.0.0.0 \
+  ghcr.io/ryneex/facebook-live-comment-overlay:latest
 ```
 
 ## Installation
@@ -75,19 +76,31 @@ node dist/index.js
 
 ### Environment Variables
 
+- `PORT` (optional): Port to listen on. Defaults to 3000.
+- `HOST` (optional): Host to listen on. Defaults to 0.0.0.0.
 - `SECRET_KEY` (optional): Secret key for API authentication. If provided, all API requests must include a valid API key.
-- `BASE_URL` (optional): Base URL for the server. Defaults to `http://0.0.0.0:3000`.
+- `BASE_URL` (optional): Base URL for the server. Defaults to `http://<HOST>:<PORT>`.
 
-### Command Line Options
+**Note:** When running in Docker, use environment variables to configure the server. CLI arguments are only available when running locally.
 
-- `--port, -p`: Port to listen on (default: 3000)
-- `--host, -h`: Host to listen on (default: 0.0.0.0)
-- `--secret, -s`: Secret key for API authentication (optional)
+### Command Line Options (Local Development Only)
 
-Example:
+When running locally (not in Docker), you can use CLI arguments:
+
+- `--port, -p`: Port to listen on (default: 3000). Can be overridden by `PORT` environment variable.
+- `--host, -h`: Host to listen on (default: 0.0.0.0). Can be overridden by `HOST` environment variable.
+- `--secret, -s`: Secret key for API authentication (optional). Can be overridden by `SECRET_KEY` environment variable.
+
+**Note:** Environment variables take precedence over CLI arguments.
+
+Examples:
 
 ```bash
+# Using CLI arguments
 node dist/index.js --port 8080 --host 0.0.0.0 --secret my-secret-key
+
+# Using environment variables
+PORT=8080 HOST=0.0.0.0 SECRET_KEY=my-secret-key node dist/index.js
 ```
 
 ## Usage
